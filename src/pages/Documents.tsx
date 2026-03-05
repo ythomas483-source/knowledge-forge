@@ -103,8 +103,9 @@ const Documents = () => {
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Service</th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Taille</th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chunks</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Statut</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
+                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Statut</th>
+                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
+                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,6 +145,22 @@ const Documents = () => {
                         )}
                       </td>
                       <td className="py-3 px-4 text-sm text-muted-foreground">{doc.uploadedAt}</td>
+                      <td className="py-3 px-4">
+                        {isGuest ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground cursor-not-allowed">
+                                <Lock className="w-3 h-3" /> {t("access_restricted")}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>{t("access_restricted")}</TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <Button variant="ghost" size="sm" className="gap-1 text-xs h-7">
+                            <Download className="w-3 h-3" /> {t("download")}
+                          </Button>
+                        )}
+                      </td>
                     </motion.tr>
                   );
                 })}
