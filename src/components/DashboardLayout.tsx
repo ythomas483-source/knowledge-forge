@@ -3,13 +3,12 @@ import AppSidebar from "./AppSidebar";
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  role?: "admin" | "user" | "guest";
 }
 
-const DashboardLayout = ({ children, role = "admin" }: DashboardLayoutProps) => {
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div className="flex min-h-screen bg-background">
-      <AppSidebar role={role} />
+      <AppSidebar />
       <main className="flex-1 overflow-auto">
         {children}
       </main>
