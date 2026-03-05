@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRole } from "@/contexts/RoleContext";
 import {
   LayoutDashboard,
   BookOpen,
@@ -24,7 +25,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "Tableau de bord", icon: LayoutDashboard, path: "/" },
+  { label: "Tableau de bord", icon: LayoutDashboard, path: "/dashboard" },
   { label: "Formations", icon: BookOpen, path: "/formations" },
   { label: "Documents", icon: FileText, path: "/documents" },
   { label: "Évaluations", icon: ClipboardCheck, path: "/evaluations" },
@@ -34,11 +35,8 @@ const navItems: NavItem[] = [
   { label: "Paramètres", icon: Settings, path: "/settings" },
 ];
 
-interface AppSidebarProps {
-  role?: "admin" | "user" | "guest";
-}
-
-const AppSidebar = ({ role = "admin" }: AppSidebarProps) => {
+const AppSidebar = () => {
+  const { role } = useRole();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
