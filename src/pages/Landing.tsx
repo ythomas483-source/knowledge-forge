@@ -34,8 +34,7 @@ const Landing = () => {
   const { locale, setLocale, t } = useLanguage();
 
   const selectRole = (role: "admin" | "user" | "guest") => {
-    setRole(role);
-    navigate("/dashboard");
+    navigate(`/login?role=${role}`);
   };
 
   const roles = [
