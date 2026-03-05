@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
-import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation } from "lucide-react";
+import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation, Download, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRole } from "@/contexts/RoleContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const documents = [
   { id: 1, name: "Politique_Securite_Reseau_v3.pdf", type: "PDF", service: "IT", size: "2.4 MB", indexed: true, chunks: 48, uploadedAt: "12 jan 2025" },
@@ -28,6 +31,10 @@ const serviceBadgeColors: Record<string, string> = {
 };
 
 const Documents = () => {
+  const { role } = useRole();
+  const { t } = useLanguage();
+  const isGuest = role === "guest";
+
   return (
     <DashboardLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
@@ -43,10 +50,12 @@ const Documents = () => {
               Bibliothèque documentaire & base vectorielle
             </p>
           </div>
-          <Button className="gradient-primary text-primary-foreground gap-2 shadow-md hover:shadow-lg transition-shadow">
-            <Upload className="w-4 h-4" />
-            Importer
-          </Button>
+          {!isGuest && (
+            <Button className="gradient-primary text-primary-foreground gap-2 shadow-md hover:shadow-lg transition-shadow">
+              <Upload className="w-4 h-4" />
+              Importer
+            </Button>
+          )}
         </motion.div>
 
         {/* Search */}
@@ -65,17 +74,19 @@ const Documents = () => {
           </Button>
         </motion.div>
 
-        {/* Upload Zone */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors cursor-pointer group"
-        >
-          <Upload className="w-10 h-10 mx-auto text-muted-foreground group-hover:text-primary transition-colors mb-3" />
-          <p className="text-sm font-medium text-foreground">Glissez vos fichiers ici ou cliquez pour importer</p>
-          <p className="text-xs text-muted-foreground mt-1">PDF, DOCX, PPTX, Wiki — Max 50MB par fichier</p>
-        </motion.div>
+        {/* Upload Zone (hidden for guests) */}
+        {!isGuest && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 transition-colors cursor-pointer group"
+          >
+            <Upload className="w-10 h-10 mx-auto text-muted-foreground group-hover:text-primary transition-colors mb-3" />
+            <p className="text-sm font-medium text-foreground">Glissez vos fichiers ici ou cliquez pour importer</p>
+            <p className="text-xs text-muted-foreground mt-1">PDF, DOCX, PPTX, Wiki — Max 50MB par fichier</p>
+          </motion.div>
+        )}
 
         {/* Documents Table */}
         <motion.div
@@ -92,8 +103,9 @@ const Documents = () => {
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Service</th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Taille</th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chunks</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Statut</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
+                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Statut</th>
+                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
+                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -133,6 +145,22 @@ const Documents = () => {
                         )}
                       </td>
                       <td className="py-3 px-4 text-sm text-muted-foreground">{doc.uploadedAt}</td>
+                      <td className="py-3 px-4">
+                        {isGuest ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground cursor-not-allowed">
+                                <Lock className="w-3 h-3" /> {t("access_restricted")}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>{t("access_restricted")}</TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <Button variant="ghost" size="sm" className="gap-1 text-xs h-7">
+                            <Download className="w-3 h-3" /> {t("download")}
+                          </Button>
+                        )}
+                      </td>
                     </motion.tr>
                   );
                 })}

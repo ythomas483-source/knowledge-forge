@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Shield, Users, Eye, Brain, Sparkles, Database, Building2, Server, Monitor, ArrowRight, Globe } from "lucide-react";
-import { useRole } from "@/contexts/RoleContext";
 import { useLanguage, type Locale } from "@/contexts/LanguageContext";
 
 const locales: { code: Locale; label: string }[] = [
@@ -30,12 +29,10 @@ const item = {
 
 const Landing = () => {
   const navigate = useNavigate();
-  const { setRole } = useRole();
   const { locale, setLocale, t } = useLanguage();
 
   const selectRole = (role: "admin" | "user" | "guest") => {
-    setRole(role);
-    navigate("/dashboard");
+    navigate(`/login?role=${role}`);
   };
 
   const roles = [
