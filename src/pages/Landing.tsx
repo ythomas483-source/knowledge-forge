@@ -135,33 +135,13 @@ const Landing = () => {
       </header>
 
       <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12 py-8 lg:py-16 space-y-20">
-        {/* Hero */}
+        {/* Hero subtitle */}
         <motion.section
-          initial={{ opacity: 0, y: -30 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center space-y-6"
+          className="text-center space-y-4"
         >
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex justify-center mb-6"
-          >
-            <img src={luminaLogo} alt="Lumina Swiss" className="h-20 w-auto drop-shadow-2xl" />
-          </motion.div>
-
-          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-none">
-            <span className="text-gradient-silver">Lumina</span>{" "}
-            <span className="text-gradient-red relative">
-              Swiss
-              <motion.span
-                animate={{ opacity: [0.3, 0.7, 0.3] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute -bottom-2 left-0 right-0 h-1 bg-primary rounded-full"
-              />
-            </span>
-          </h1>
           <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             {t("hero_subtitle")}
           </p>
