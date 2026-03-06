@@ -14,7 +14,9 @@ import {
   ChevronRight,
   Shield,
   Gamepad2,
+  UserPlus,
 } from "lucide-react";
+import InviteDialog from "@/components/InviteDialog";
 
 
 interface NavItem {
@@ -114,8 +116,28 @@ const AppSidebar = () => {
         })}
       </nav>
 
-      {/* Role Badge & Collapse */}
+      {/* Invite + Role Badge & Collapse */}
       <div className="px-3 pb-4 space-y-3 border-t border-sidebar-border pt-3">
+        {/* Invite button */}
+        <InviteDialog
+          trigger={
+            <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground transition-all duration-200 group cursor-pointer">
+              <UserPlus className="w-5 h-5 flex-shrink-0 text-primary" />
+              <AnimatePresence>
+                {!collapsed && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    className="text-sm font-medium overflow-hidden whitespace-nowrap"
+                  >
+                    Inviter
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+          }
+        />
         <AnimatePresence>
           {!collapsed && (
             <motion.div

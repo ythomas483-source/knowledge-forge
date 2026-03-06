@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Shield, Users, Eye, Lock, Mail, ArrowLeft } from "lucide-react";
+import { Shield, Users, Lock, Mail, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRole } from "@/contexts/RoleContext";
@@ -11,7 +11,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const roleConfig = {
   admin: { icon: Shield, gradient: "from-primary to-primary/70", label: "admin_title" },
   user: { icon: Users, gradient: "from-silver to-silver-dark", label: "user_title" },
-  guest: { icon: Eye, gradient: "from-muted-foreground to-muted-foreground/70", label: "guest_title" },
 } as const;
 
 const Login = () => {
@@ -22,10 +21,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const roleParam = (searchParams.get("role") || "guest") as "admin" | "user" | "guest";
+  const roleParam = (searchParams.get("role") || "user") as "admin" | "user";
   const config = roleConfig[roleParam];
   const RoleIcon = config.icon;
-  const isGuest = roleParam === "guest";
 
   const handleLogin = (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -85,18 +83,7 @@ const Login = () => {
             </div>
           </div>
 
-          {isGuest ? (
-            <div className="space-y-4 text-center">
-              <p className="text-sm text-muted-foreground">{t("login_guest_info")}</p>
-              <Button
-                onClick={() => handleLogin()}
-                className="w-full gradient-primary text-primary-foreground font-semibold h-12 glow-red"
-              >
-                {t("login_guest_continue")}
-              </Button>
-            </div>
-          ) : (
-            <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-foreground">{t("login_email")}</label>
                 <div className="relative">
@@ -132,7 +119,6 @@ const Login = () => {
                 {t("login_submit")}
               </Button>
             </form>
-          )}
 
           <p className="text-[10px] font-mono text-center text-muted-foreground bg-secondary px-3 py-1 rounded-full">
             {t("rbac")}

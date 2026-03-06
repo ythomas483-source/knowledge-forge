@@ -40,7 +40,7 @@ const serviceBadgeColors: Record<string, string> = {
 const Documents = () => {
   const { role } = useRole();
   const { t } = useLanguage();
-  const isGuest = role === "guest";
+  const isRestricted = false;
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -72,7 +72,7 @@ const Documents = () => {
               Bibliothèque documentaire & base vectorielle
             </p>
           </div>
-          {!isGuest && (
+          {!isRestricted && (
             <Button className="gradient-primary text-primary-foreground gap-2 shadow-md hover:shadow-lg transition-shadow">
               <Upload className="w-4 h-4" />
               Importer
@@ -97,7 +97,7 @@ const Documents = () => {
         </motion.div>
 
         {/* Upload Zone (hidden for guests) */}
-        {!isGuest && (
+        {!isRestricted && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -168,7 +168,7 @@ const Documents = () => {
                       </td>
                       <td className="py-3 px-4 text-sm text-muted-foreground">{doc.uploadedAt}</td>
                       <td className="py-3 px-4">
-                        {isGuest ? (
+                        {isRestricted ? (
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <span className="inline-flex items-center gap-1 text-xs text-muted-foreground cursor-not-allowed">

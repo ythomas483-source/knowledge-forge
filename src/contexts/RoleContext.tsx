@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
-type Role = "admin" | "user" | "guest";
+type Role = "admin" | "user";
 
 interface RoleContextType {
   role: Role;
@@ -12,7 +12,7 @@ interface RoleContextType {
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export const RoleProvider = ({ children }: { children: ReactNode }) => {
-  const [role, setRoleState] = useState<Role>("guest");
+  const [role, setRoleState] = useState<Role>("user");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const setRole = (r: Role) => {
@@ -21,7 +21,7 @@ export const RoleProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    setRoleState("guest");
+    setRoleState("user");
     setIsAuthenticated(false);
   };
 
