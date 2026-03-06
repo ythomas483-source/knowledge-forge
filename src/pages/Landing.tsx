@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Shield, Users, Eye, Sparkles, Database, Building2, ArrowRight, Globe, Monitor, Server } from "lucide-react";
+import { Shield, Users, Sparkles, Database, Building2, ArrowRight, Globe, Monitor, Server } from "lucide-react";
 import { useLanguage, type Locale } from "@/contexts/LanguageContext";
 
 
@@ -32,7 +32,7 @@ const Landing = () => {
   const navigate = useNavigate();
   const { locale, setLocale, t } = useLanguage();
 
-  const selectRole = (role: "admin" | "user" | "guest") => {
+  const selectRole = (role: "admin" | "user") => {
     navigate(`/login?role=${role}`);
   };
 
@@ -54,15 +54,6 @@ const Landing = () => {
       gradient: "from-silver to-silver-dark",
       border: "border-silver/30",
       glow: "glow-silver",
-    },
-    {
-      key: "guest" as const,
-      icon: Eye,
-      titleKey: "guest_title",
-      descKey: "guest_desc",
-      gradient: "from-muted-foreground to-muted-foreground/70",
-      border: "border-muted-foreground/30",
-      glow: "",
     },
   ];
 
@@ -155,7 +146,7 @@ const Landing = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {roles.map((r) => (
               <motion.button
                 key={r.key}
