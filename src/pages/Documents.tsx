@@ -1,11 +1,18 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
-import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation, Download, Lock } from "lucide-react";
+import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation, Download, Lock, Send, Bot, User, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useRole } from "@/contexts/RoleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+interface Message {
+  role: "system" | "user";
+  content: string;
+}
 
 const documents = [
   { id: 1, name: "Politique_Securite_Reseau_v3.pdf", type: "PDF", service: "IT", size: "2.4 MB", indexed: true, chunks: 48, uploadedAt: "12 jan 2025" },
