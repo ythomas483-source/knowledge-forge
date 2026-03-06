@@ -42,6 +42,21 @@ const Documents = () => {
   const { t } = useLanguage();
   const isGuest = role === "guest";
 
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+
+  const send = () => {
+    if (!input.trim()) return;
+    const userMsg: Message = { role: "user", content: input };
+    const systemResponse: Message = {
+      role: "system",
+      content:
+        "✅ J'ai analysé vos documents importés. Voici ce que je propose :\n\n📋 **Formation générée : Sécurité Réseau – Niveau 1**\n- 5 modules basés sur \"Politique_Securite_Reseau_v3.pdf\"\n- Quiz auto-générés à partir des procédures\n- Durée estimée : 2h30\n\nVoulez-vous que j'affine le contenu ou que je génère les évaluations ?",
+    };
+    setMessages([...messages, userMsg, systemResponse]);
+    setInput("");
+  };
+
   return (
     <DashboardLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
