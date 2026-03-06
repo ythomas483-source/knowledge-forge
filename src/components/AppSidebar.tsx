@@ -12,10 +12,10 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Brain,
   Shield,
   Gamepad2,
 } from "lucide-react";
+import luminaLogo from "@/assets/lumina-swiss-logo.png";
 
 interface NavItem {
   label: string;
@@ -52,9 +52,7 @@ const AppSidebar = () => {
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-16 border-b border-sidebar-border">
-        <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
-          <Brain className="w-5 h-5 text-primary-foreground" />
-        </div>
+        <img src={luminaLogo} alt="Lumina Swiss" className="w-9 h-9 object-contain flex-shrink-0" />
         <AnimatePresence>
           {!collapsed && (
             <motion.div
@@ -63,8 +61,9 @@ const AppSidebar = () => {
               exit={{ opacity: 0, width: 0 }}
               className="overflow-hidden whitespace-nowrap"
             >
-              <span className="text-lg font-bold text-sidebar-accent-foreground tracking-tight">
-                LearnForge
+              <span className="text-lg font-bold tracking-tight">
+                <span className="text-gradient-silver">Lumina</span>{" "}
+                <span className="text-gradient-red">Swiss</span>
               </span>
               <span className="text-xs block text-sidebar-foreground -mt-1">
                 Knowledge Engine

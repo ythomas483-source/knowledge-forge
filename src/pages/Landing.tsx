@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Shield, Users, Eye, Brain, Sparkles, Database, Building2, Server, Monitor, ArrowRight, Globe } from "lucide-react";
+import { Shield, Users, Eye, Sparkles, Database, Building2, ArrowRight, Globe, Monitor, Server } from "lucide-react";
 import { useLanguage, type Locale } from "@/contexts/LanguageContext";
+import luminaLogo from "@/assets/lumina-swiss-logo.png";
 
 const locales: { code: Locale; label: string }[] = [
   { code: "fr", label: "FR" },
@@ -43,14 +44,16 @@ const Landing = () => {
       descKey: "admin_desc",
       gradient: "from-primary to-primary/70",
       border: "border-primary/30",
+      glow: "glow-red",
     },
     {
       key: "user" as const,
       icon: Users,
       titleKey: "user_title",
       descKey: "user_desc",
-      gradient: "from-accent to-accent/70",
-      border: "border-accent/30",
+      gradient: "from-silver to-silver-dark",
+      border: "border-silver/30",
+      glow: "glow-silver",
     },
     {
       key: "guest" as const,
@@ -59,6 +62,7 @@ const Landing = () => {
       descKey: "guest_desc",
       gradient: "from-muted-foreground to-muted-foreground/70",
       border: "border-muted-foreground/30",
+      glow: "",
     },
   ];
 
@@ -71,32 +75,55 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Animated background */}
+      {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-accent/5 blur-3xl" />
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.08, 0.15, 0.08] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full bg-primary/10 blur-[100px]"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], opacity: [0.05, 0.1, 0.05] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute -bottom-60 -left-40 w-[600px] h-[600px] rounded-full bg-silver/5 blur-[80px]"
+        />
+        {/* Grid overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'linear-gradient(hsl(0 0% 50%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 50%) 1px, transparent 1px)',
+          backgroundSize: '60px 60px'
+        }} />
       </div>
 
       {/* Top bar */}
       <header className="relative z-10 flex items-center justify-between px-6 lg:px-12 py-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-            <Brain className="w-5 h-5 text-primary-foreground" />
-          </div>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3"
+        >
+          <img src={luminaLogo} alt="Lumina Swiss" className="h-10 w-auto" />
           <div>
-            <span className="text-lg font-bold text-foreground tracking-tight">LearnForge</span>
+            <span className="text-lg font-bold tracking-tight">
+              <span className="text-gradient-silver">Lumina</span>{" "}
+              <span className="text-gradient-red">Swiss</span>
+            </span>
             <span className="text-[10px] block text-muted-foreground -mt-0.5 font-medium">{t("hero_title")}</span>
           </div>
-        </div>
+        </motion.div>
+
         {/* Language switcher */}
-        <div className="flex items-center gap-1 bg-muted/60 rounded-full px-1 py-1">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-1 bg-secondary/60 backdrop-blur-sm rounded-full px-1 py-1 border border-border/50"
+        >
           {locales.map((l) => (
             <button
               key={l.code}
               onClick={() => setLocale(l.code)}
               className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                 locale === l.code
-                  ? "bg-primary text-primary-foreground shadow-sm"
+                  ? "bg-primary text-primary-foreground shadow-sm glow-red"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -104,19 +131,36 @@ const Landing = () => {
             </button>
           ))}
           <SwissCross />
-        </div>
+        </motion.div>
       </header>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12 py-8 lg:py-16 space-y-16">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12 py-8 lg:py-16 space-y-20">
         {/* Hero */}
         <motion.section
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center space-y-4"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center space-y-6"
         >
-          <h1 className="text-4xl lg:text-6xl font-extrabold text-foreground tracking-tight">
-            Learn<span className="text-primary">Forge</span>
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex justify-center mb-6"
+          >
+            <img src={luminaLogo} alt="Lumina Swiss" className="h-20 w-auto drop-shadow-2xl" />
+          </motion.div>
+
+          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-none">
+            <span className="text-gradient-silver">Lumina</span>{" "}
+            <span className="text-gradient-red relative">
+              Swiss
+              <motion.span
+                animate={{ opacity: [0.3, 0.7, 0.3] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute -bottom-2 left-0 right-0 h-1 bg-primary rounded-full"
+              />
+            </span>
           </h1>
           <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             {t("hero_subtitle")}
@@ -124,10 +168,10 @@ const Landing = () => {
         </motion.section>
 
         {/* RBAC Section */}
-        <motion.section variants={container} initial="hidden" animate="show" className="space-y-6">
+        <motion.section variants={container} initial="hidden" animate="show" className="space-y-8">
           <motion.div variants={item} className="text-center space-y-2">
             <h2 className="text-2xl font-bold text-foreground">{t("select_role")}</h2>
-            <p className="text-xs font-mono text-muted-foreground bg-muted inline-block px-3 py-1 rounded-full">
+            <p className="text-xs font-mono text-muted-foreground bg-secondary inline-block px-3 py-1 rounded-full border border-border/50">
               {t("rbac")}
             </p>
           </motion.div>
@@ -137,10 +181,10 @@ const Landing = () => {
               <motion.button
                 key={r.key}
                 variants={item}
-                whileHover={{ scale: 1.03, y: -4 }}
+                whileHover={{ scale: 1.04, y: -6 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => selectRole(r.key)}
-                className={`glass-card rounded-2xl p-8 text-left border ${r.border} hover:shadow-xl transition-shadow group cursor-pointer`}
+                className={`glass-card rounded-2xl p-8 text-left border ${r.border} hover:${r.glow} transition-all duration-300 group cursor-pointer`}
               >
                 <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                   <r.icon className="w-7 h-7 text-primary-foreground" />
@@ -163,10 +207,14 @@ const Landing = () => {
           className="flex flex-wrap justify-center gap-4"
         >
           {features.map((f) => (
-            <div key={f.key} className="flex items-center gap-2 bg-muted/50 rounded-full px-5 py-2.5">
+            <motion.div
+              key={f.key}
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-2 bg-secondary/50 backdrop-blur-sm rounded-full px-5 py-2.5 border border-border/30"
+            >
               <f.icon className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium text-foreground">{t(f.key)}</span>
-            </div>
+            </motion.div>
           ))}
         </motion.section>
 
@@ -179,7 +227,7 @@ const Landing = () => {
         >
           <h2 className="text-xl font-bold text-foreground text-center">{t("arch_title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="glass-card rounded-xl p-6 border border-primary/20">
+            <div className="glass-card rounded-xl p-6 border-glow-red">
               <div className="flex items-center gap-3 mb-3">
                 <Monitor className="w-6 h-6 text-primary" />
                 <h3 className="font-bold text-foreground">{t("arch_client")}</h3>
@@ -191,15 +239,15 @@ const Landing = () => {
                 ))}
               </div>
             </div>
-            <div className="glass-card rounded-xl p-6 border border-accent/20">
+            <div className="glass-card rounded-xl p-6 border border-silver/20">
               <div className="flex items-center gap-3 mb-3">
-                <Server className="w-6 h-6 text-accent-foreground" />
+                <Server className="w-6 h-6 text-silver" />
                 <h3 className="font-bold text-foreground">{t("arch_server")}</h3>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">{t("arch_server_desc")}</p>
               <div className="flex gap-2 mt-4">
                 {["Infomaniak", "Ubuntu", "pgvector"].map((tech) => (
-                  <span key={tech} className="text-[10px] font-bold bg-accent/10 text-accent-foreground px-2 py-0.5 rounded-full">{tech}</span>
+                  <span key={tech} className="text-[10px] font-bold bg-silver/10 text-silver px-2 py-0.5 rounded-full">{tech}</span>
                 ))}
               </div>
             </div>
