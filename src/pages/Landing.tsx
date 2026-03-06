@@ -101,7 +101,9 @@ const Landing = () => {
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-3"
         >
-          <img src={luminaLogo} alt="Lumina Swiss" className="h-10 w-auto" />
+          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0 glow-red">
+            <span className="text-primary-foreground font-extrabold text-sm">LS</span>
+          </div>
           <div>
             <span className="text-lg font-bold tracking-tight">
               <span className="text-gradient-silver">Lumina</span>{" "}
