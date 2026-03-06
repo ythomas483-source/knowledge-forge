@@ -47,10 +47,20 @@ const Documents = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [piiDialogOpen, setPiiDialogOpen] = useState(false);
+  const [pendingInput, setPendingInput] = useState("");
 
-  const send = () => {
+  const { detect, isLoading: piiLoading, loadProgress, lastResult } = usePIIDetector();
+
+  const triggerPIICheck = async () => {
     if (!input.trim()) return;
-    const userMsg: Message = { role: "user", content: input };
+    setPendingInput(input);
+    setPiiDialogOpen(true);
+    await detect(input);
+  };
+
+  const sendWithText = (text: string) => {
+    const userMsg: Message = { role: "user", content: text };
     const systemResponse: Message = {
       role: "system",
       content:
@@ -58,6 +68,14 @@ const Documents = () => {
     };
     setMessages([...messages, userMsg, systemResponse]);
     setInput("");
+    setPiiDialogOpen(false);
+    setPendingInput("");
+  };
+
+  const send = () => {
+    if (!input.trim()) return;
+    triggerPIICheck();
+  };
   };
 
   return (
@@ -251,10 +269,25 @@ const Documents = () => {
               placeholder="Ex : Créer une formation sécurité réseau à partir des documents IT..."
               className="flex-1"
             />
-            <Button onClick={send} className="gradient-primary text-primary-foreground px-4">
+            <Button onClick={send} className="gradient-primary text-primary-foreground px-4 gap-2">
+              <ShieldCheck className="w-4 h-4" />
               <Send className="w-4 h-4" />
             </Button>
           </div>
+
+          {/* PII Preview Dialog */}
+          <PIIPreviewDialog
+            open={piiDialogOpen}
+            onOpenChange={setPiiDialogOpen}
+            result={lastResult}
+            isLoading={piiLoading}
+            loadProgress={loadProgress}
+            onConfirm={(anonymizedText) => {
+              toast({ title: "🛡️ Données anonymisées", description: `${lastResult?.entities.length ?? 0} PII remplacées` });
+              sendWithText(anonymizedText);
+            }}
+            onCancel={() => { setPiiDialogOpen(false); setPendingInput(""); }}
+          />
         </motion.div>
       </div>
     </DashboardLayout>
