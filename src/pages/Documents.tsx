@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
-import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation, Download, Lock, Send, Bot, User, Sparkles } from "lucide-react";
+import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation, Download, Lock, Send, Bot, User, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRole } from "@/contexts/RoleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { usePIIDetector } from "@/hooks/usePIIDetector";
+import PIIPreviewDialog from "@/components/PIIPreviewDialog";
+import { toast } from "@/hooks/use-toast";
 
 interface Message {
   role: "system" | "user";
