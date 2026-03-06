@@ -15,7 +15,7 @@ import {
   Shield,
   Gamepad2,
 } from "lucide-react";
-import luminaLogo from "@/assets/lumina-swiss-logo.png";
+
 
 interface NavItem {
   label: string;
@@ -52,7 +52,9 @@ const AppSidebar = () => {
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-16 border-b border-sidebar-border">
-        <img src={luminaLogo} alt="Lumina Swiss" className="w-9 h-9 object-contain flex-shrink-0" />
+        <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
+          <span className="text-primary-foreground font-extrabold text-xs">LS</span>
+        </div>
         <AnimatePresence>
           {!collapsed && (
             <motion.div
