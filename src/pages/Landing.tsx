@@ -163,9 +163,10 @@ const Landing = () => {
                 whileHover={{ scale: 1.04, y: -6 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => selectRole(r.key)}
-                className={`glass-card rounded-2xl p-8 text-left border ${r.border} hover:${r.glow} transition-all duration-300 group cursor-pointer`}
+                className={`card-elevated card-accent-top hover-ring rounded-2xl p-8 text-left border ${r.border} transition-all duration-300 group cursor-pointer`}
+                style={{ "--accent-gradient": r.key === "admin" ? "var(--gradient-primary)" : r.key === "user" ? "var(--gradient-silver)" : "linear-gradient(135deg, hsl(220 8% 60%), hsl(220 8% 45%))" } as React.CSSProperties}
               >
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center mb-5 icon-bounce`}>
                   <r.icon className="w-7 h-7 text-primary-foreground" />
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">{t(r.titleKey)}</h3>
@@ -188,8 +189,8 @@ const Landing = () => {
           {features.map((f) => (
             <motion.div
               key={f.key}
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 bg-secondary/50 backdrop-blur-sm rounded-full px-5 py-2.5 border border-border/30"
+              whileHover={{ scale: 1.08, y: -2 }}
+              className="flex items-center gap-2 bg-secondary/50 backdrop-blur-sm rounded-full px-5 py-2.5 border border-border/30 shadow-md hover:shadow-lg transition-shadow"
             >
               <f.icon className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium text-foreground">{t(f.key)}</span>
@@ -206,7 +207,7 @@ const Landing = () => {
         >
           <h2 className="text-xl font-bold text-foreground text-center">{t("arch_title")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="glass-card rounded-xl p-6 border-glow-red">
+            <div className="card-elevated rounded-xl p-6 border-glow-red">
               <div className="flex items-center gap-3 mb-3">
                 <Monitor className="w-6 h-6 text-primary" />
                 <h3 className="font-bold text-foreground">{t("arch_client")}</h3>
@@ -218,7 +219,7 @@ const Landing = () => {
                 ))}
               </div>
             </div>
-            <div className="glass-card rounded-xl p-6 border border-silver/20">
+            <div className="card-elevated rounded-xl p-6 border border-silver/20">
               <div className="flex items-center gap-3 mb-3">
                 <Server className="w-6 h-6 text-silver" />
                 <h3 className="font-bold text-foreground">{t("arch_server")}</h3>

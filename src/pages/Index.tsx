@@ -93,7 +93,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:col-span-2 glass-card rounded-xl p-6"
+            className="lg:col-span-2 card-elevated rounded-xl p-6"
           >
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-semibold text-foreground">Formations en cours</h2>
@@ -108,9 +108,9 @@ const Index = () => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 + i * 0.1 }}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group"
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-all cursor-pointer group card-hover-lift"
                 >
-                  <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                  <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0 icon-bounce">
                     <BookOpen className="w-5 h-5 text-primary-foreground" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -138,7 +138,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="glass-card rounded-xl p-6"
+            className="card-elevated rounded-xl p-6"
           >
             <h2 className="text-lg font-semibold text-foreground mb-5">Activité récente</h2>
             <div className="space-y-4">
@@ -184,9 +184,10 @@ const Index = () => {
               key={action.title}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="glass-card rounded-xl p-5 text-left hover:shadow-lg transition-all group cursor-pointer"
+              className="card-elevated card-accent-left hover-ring rounded-xl p-5 text-left hover:shadow-lg transition-all group cursor-pointer"
+              style={{ "--accent-gradient": action.gradient === "gradient-primary" ? "var(--gradient-primary)" : action.gradient === "bg-success" ? "linear-gradient(135deg, hsl(152 60% 42%), hsl(152 60% 32%))" : "var(--gradient-silver)" } as React.CSSProperties}
             >
-              <div className={`w-10 h-10 rounded-lg ${action.gradient} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+              <div className={`w-10 h-10 rounded-lg ${action.gradient} flex items-center justify-center mb-3 icon-bounce`}>
                 <action.icon className="w-5 h-5 text-primary-foreground" />
               </div>
               <p className="text-sm font-semibold text-foreground">{action.title}</p>
