@@ -36,7 +36,7 @@ export async function loadNERModel(
   if (nerPipeline) return nerPipeline;
   if (loadingPromise) return loadingPromise;
 
-  loadingPromise = pipeline("token-classification", "Xenova/bert-base-NER", {
+  loadingPromise = (pipeline as any)("token-classification", "Xenova/bert-base-NER", {
     dtype: "q8",
     progress_callback: (data: any) => {
       if (data.status === "progress" && onProgress) {
