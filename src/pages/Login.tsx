@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRole } from "@/contexts/RoleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import luminaLogo from "@/assets/lumina-swiss-logo.png";
+
 
 const roleConfig = {
   admin: { icon: Shield, gradient: "from-primary to-primary/70", label: "admin_title" },
@@ -69,7 +69,7 @@ const Login = () => {
           {/* Header */}
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-3 mb-2">
-              <img src={luminaLogo} alt="Lumina Swiss" className="h-10 w-auto" />
+              
               <span className="text-lg font-bold">
                 <span className="text-gradient-silver">Lumina</span>{" "}
                 <span className="text-gradient-red">Swiss</span>

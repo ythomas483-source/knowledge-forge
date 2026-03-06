@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Shield, Users, Eye, Sparkles, Database, Building2, ArrowRight, Globe, Monitor, Server } from "lucide-react";
 import { useLanguage, type Locale } from "@/contexts/LanguageContext";
-import luminaLogo from "@/assets/lumina-swiss-logo.png";
+
 
 const locales: { code: Locale; label: string }[] = [
   { code: "fr", label: "FR" },
