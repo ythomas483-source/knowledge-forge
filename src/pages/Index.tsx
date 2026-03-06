@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatCard from "@/components/StatCard";
+import InviteDialog from "@/components/InviteDialog";
 import {
   Users,
   BookOpen,
@@ -10,6 +11,7 @@ import {
   Clock,
   Target,
   Zap,
+  UserPlus,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
@@ -173,13 +175,13 @@ const Index = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
         >
           {[
             { icon: Target, title: "Générer une formation", desc: "À partir de vos documents", gradient: "gradient-primary" },
             { icon: TrendingUp, title: "Voir les analytics", desc: "Performance des équipes", gradient: "gradient-accent" },
             { icon: Clock, title: "Lancer un jeu de rôle", desc: "Simulation interactive", gradient: "bg-success" },
-          ].map((action, i) => (
+          ].map((action) => (
             <motion.button
               key={action.title}
               whileHover={{ scale: 1.02, y: -2 }}
@@ -194,6 +196,23 @@ const Index = () => {
               <p className="text-xs text-muted-foreground mt-0.5">{action.desc}</p>
             </motion.button>
           ))}
+          {/* Invite action */}
+          <InviteDialog
+            trigger={
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="card-elevated card-accent-left hover-ring rounded-xl p-5 text-left hover:shadow-lg transition-all group cursor-pointer"
+                style={{ "--accent-gradient": "var(--gradient-primary)" } as React.CSSProperties}
+              >
+                <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center mb-3 icon-bounce">
+                  <UserPlus className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <p className="text-sm font-semibold text-foreground">Inviter un participant</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Lien d'invitation externe</p>
+              </motion.button>
+            }
+          />
         </motion.div>
       </div>
     </DashboardLayout>
