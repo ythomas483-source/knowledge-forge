@@ -40,7 +40,7 @@ const serviceBadgeColors: Record<string, string> = {
 const Documents = () => {
   const { role } = useRole();
   const { t } = useLanguage();
-  const isGuest = role === "guest";
+  const isRestricted = false;
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
