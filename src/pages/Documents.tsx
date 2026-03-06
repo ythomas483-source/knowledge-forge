@@ -76,7 +76,7 @@ const Documents = () => {
     if (!input.trim()) return;
     triggerPIICheck();
   };
-  };
+
 
   return (
     <DashboardLayout>
