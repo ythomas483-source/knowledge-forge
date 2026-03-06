@@ -48,7 +48,7 @@ const AppSidebar = () => {
     <motion.aside
       animate={{ width: collapsed ? 72 : 260 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="gradient-dark flex flex-col h-screen sticky top-0 z-30 border-r border-sidebar-border"
+      className="gradient-dark flex flex-col h-screen sticky top-0 z-30 border-r border-sidebar-border sidebar-depth"
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-16 border-b border-sidebar-border">
@@ -92,7 +92,7 @@ const AppSidebar = () => {
               {isActive && (
                 <motion.div
                   layoutId="activeIndicator"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-sidebar-primary"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-sidebar-primary active-glow"
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
