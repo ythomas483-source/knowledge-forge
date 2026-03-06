@@ -87,7 +87,7 @@ export function deanonymize(
 ): string {
   let text = anonymizedText;
   for (const [token, original] of tokenMap) {
-    text = text.replaceAll(token, original);
+    text = text.split(token).join(original);
   }
   return text;
 }
