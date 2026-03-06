@@ -21,7 +21,7 @@ export const RoleProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    setRoleState("guest");
+    setRoleState("user");
     setIsAuthenticated(false);
   };
 
