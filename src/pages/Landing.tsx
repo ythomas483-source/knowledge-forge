@@ -68,7 +68,7 @@ const Landing = () => {
           className="flex items-center gap-3"
         >
           <div>
-            <span className="text-lg font-bold tracking-tight">
+            <span className="text-2xl font-bold tracking-tight">
               <span className="text-gradient-silver">Lumina</span>{" "}
               <span className="text-gradient-red">Swiss</span>
             </span>
