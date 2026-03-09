@@ -1,37 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Shield, Users, Lock, Mail, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Lock, Mail, ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRole } from "@/contexts/RoleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-
-const roleConfig = {
-  admin: { icon: Shield, gradient: "from-primary to-primary/70", label: "admin_title" },
-  user: { icon: Users, gradient: "from-silver to-silver-dark", label: "user_title" },
-} as const;
+import { useToast } from "@/hooks/use-toast";
+import testUsers from "@/data/testUsers.json";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { setRole } = useRole();
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const roleParam = (searchParams.get("role") || "user") as "admin" | "user";
-  const config = roleConfig[roleParam];
-  const RoleIcon = config.icon;
-
   const handleLogin = (e?: React.FormEvent) => {
     e?.preventDefault();
-    setRole(roleParam);
-    navigate("/dashboard");
+    const found = testUsers.find(
+      (u) => u.email === email.trim().toLowerCase() && u.password === password
+    );
+    if (found) {
+      setRole(found.role as "admin" | "user");
+      navigate("/dashboard");
+    } else {
+      toast({
+        variant: "destructive",
+        title: t("login_error"),
+        description: t("login_error_desc"),
+      });
+    }
   };
-
-  useEffect(() => {}, []);
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center">
@@ -67,62 +68,59 @@ const Login = () => {
           {/* Header */}
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-3 mb-2">
-              
               <span className="text-lg font-bold">
                 <span className="text-gradient-silver">Lumina</span>{" "}
                 <span className="text-gradient-red">Swiss</span>
               </span>
             </div>
-
-            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${config.gradient} flex items-center justify-center mx-auto`}>
-              <RoleIcon className="w-8 h-8 text-primary-foreground" />
-            </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground">{t("login_title")}</h1>
-              <p className="text-sm text-muted-foreground mt-1">{t(config.label)}</p>
+              <p className="text-sm text-muted-foreground mt-1">{t("access_restricted")}</p>
             </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">{t("login_email")}</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    type="email"
-                    placeholder="nom@entreprise.ch"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">{t("login_email")}</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="email"
+                  placeholder="nom@entreprise.ch"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10"
+                  required
+                />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">{t("login_password")}</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">{t("login_password")}</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10"
+                  required
+                />
               </div>
-              <Button
-                type="submit"
-                className="w-full gradient-primary text-primary-foreground font-semibold h-12 glow-red"
-              >
-                {t("login_submit")}
-              </Button>
-            </form>
+            </div>
+            <Button
+              type="submit"
+              className="w-full gradient-primary text-primary-foreground font-semibold h-12 glow-red"
+            >
+              {t("login_submit")}
+            </Button>
+          </form>
 
-          <p className="text-[10px] font-mono text-center text-muted-foreground bg-secondary px-3 py-1 rounded-full">
-            {t("rbac")}
-          </p>
+          {/* Test mode banner */}
+          <div className="flex items-center gap-2 text-[11px] text-muted-foreground bg-secondary/80 px-4 py-2 rounded-lg border border-border/50">
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+            <span>{t("login_test_mode")}</span>
+          </div>
         </div>
       </motion.div>
     </div>
