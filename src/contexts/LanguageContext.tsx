@@ -431,6 +431,7 @@ const translations: Record<Locale, Record<string, string>> = {
     nav_settings: "Settings",
     nav_invite: "Invite",
     role_guest: "guest",
+    nav_logout: "Log out",
     dashboard_title: "Dashboard",
     dashboard_subtitle: "Overview of your Knowledge Engine",
     dashboard_subtitle_guest: "Your training and assessments",
