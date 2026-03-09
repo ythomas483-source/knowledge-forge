@@ -9,6 +9,7 @@ const locales: { code: Locale; label: string }[] = [
   { code: "it", label: "IT" },
   { code: "de", label: "DE" },
   { code: "en", label: "EN" },
+  { code: "rm", label: "RM" },
 ];
 
 const SwissCross = () => (
@@ -67,11 +68,11 @@ const Landing = () => {
           className="flex items-center gap-3"
         >
           <div>
-            <span className="text-lg font-bold tracking-tight">
+            <span className="text-2xl font-bold tracking-tight">
               <span className="text-gradient-silver">Lumina</span>{" "}
               <span className="text-gradient-red">Swiss</span>
             </span>
-            <span className="text-[10px] block text-muted-foreground -mt-0.5 font-medium">{t("hero_title")}</span>
+            <span className="text-xs block text-muted-foreground -mt-0.5 font-medium">{t("hero_title")}</span>
           </div>
         </motion.div>
 
@@ -193,7 +194,7 @@ const Landing = () => {
             <SwissCross />
             <span className="text-sm font-semibold text-muted-foreground">{t("footer")}</span>
           </div>
-          <p className="text-xs text-muted-foreground">FR · IT · DE · EN</p>
+          <p className="text-xs text-muted-foreground">FR · IT · DE · EN · RM</p>
         </motion.footer>
       </main>
     </div>

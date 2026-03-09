@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
-export type Locale = "fr" | "it" | "de" | "en";
+export type Locale = "fr" | "it" | "de" | "en" | "rm";
 
 const translations: Record<Locale, Record<string, string>> = {
   fr: {
@@ -150,6 +150,43 @@ const translations: Record<Locale, Record<string, string>> = {
     login_test_mode: "Test mode — local authentication (JSON)",
     access_restricted: "Access restricted to members",
     download: "Download",
+  },
+  rm: {
+    hero_title: "Knowledge-to-Learning Engine",
+    hero_subtitle: "Transfurmai vossa documentaziun interna en furmaziuns intelligentas",
+    select_role: "Tschernai voss profil",
+    rbac: "RBAC – Controlla d'access basada sin rols",
+    admin_title: "Administratur",
+    admin_desc: "Creai furmaziuns, definai las funtaunas, administrai ils access",
+    user_title: "Collavuratur",
+    user_desc: "Suandai vossas furmaziuns, persunalisai voss finamiras, gieus da rols",
+    invite_title: "Invitar in participant",
+    invite_desc: "Generar ina colliaziun d'invitaziun",
+    invite_copy: "Copiar la colliaziun",
+    invite_copied: "Colliaziun copiada!",
+    invite_email_placeholder: "email@exempel.com",
+    invite_send: "Trametter l'invitaziun",
+    enter: "Entrar",
+    feat_ai: "Generaziun IA",
+    feat_rag: "Motor RAG",
+    feat_tenant: "Multi-tenant",
+    feat_swiss: "Hosting Svizzer",
+    arch_title: "Architectura Client / Server",
+    arch_client: "Client (Frontend)",
+    arch_client_desc: "React + Vite exequì en il navigatur da l'utilisader. Interfatscha d'interacziun cun l'IA.",
+    arch_server: "Server (Backend)",
+    arch_server_desc: "Ospità tar Infomaniak (Svizra), Ubuntu Server, API segira, motor RAG.",
+    footer: "Creà en Svizra",
+    login_title: "Annunzia",
+    login_email: "Adressa d'e-mail",
+    login_password: "Pled-clav",
+    login_submit: "S'annunziar",
+    login_back: "Enavos a la pagina principala",
+    login_error: "Annunzia fallida",
+    login_error_desc: "E-mail u pled-clav incorrect",
+    login_test_mode: "Modus da test — autentificaziun locala (JSON)",
+    access_restricted: "Access reservà als commembers",
+    download: "Telechargiar",
   },
 };
 
