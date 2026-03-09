@@ -23,7 +23,7 @@ const Login = () => {
       (u) => u.email === email.trim().toLowerCase() && u.password === password
     );
     if (found) {
-      setRole(found.role as "admin" | "user");
+      setRole(found.role as "admin" | "user" | "guest");
       navigate("/dashboard");
     } else {
       toast({

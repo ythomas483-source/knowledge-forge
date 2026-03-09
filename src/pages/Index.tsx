@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatCard from "@/components/StatCard";
 import InviteDialog from "@/components/InviteDialog";
+import { usePermissions } from "@/hooks/usePermissions";
 import {
   Users,
   BookOpen,
@@ -50,6 +51,8 @@ const item = {
 };
 
 const Index = () => {
+  const { canViewActivity, canViewQuickActions, canInvite, canGenerateFormation, canViewAnalytics, isGuest } = usePermissions();
+
   return (
     <DashboardLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
@@ -63,7 +66,7 @@ const Index = () => {
             Tableau de bord
           </h1>
           <p className="text-muted-foreground">
-            Vue d'ensemble de votre Knowledge Engine
+            {isGuest ? "Vos formations et évaluations" : "Vue d'ensemble de votre Knowledge Engine"}
           </p>
         </motion.div>
 
@@ -75,16 +78,16 @@ const Index = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
         >
           <motion.div variants={item}>
-            <StatCard title="Apprenants actifs" value={248} change="+12% ce mois" changeType="positive" icon={Users} color="primary" />
+            <StatCard title="Apprenants actifs" value={isGuest ? "—" : 248} change={isGuest ? "" : "+12% ce mois"} changeType="positive" icon={Users} color="primary" />
           </motion.div>
           <motion.div variants={item}>
-            <StatCard title="Formations actives" value={16} change="+3 cette semaine" changeType="positive" icon={BookOpen} color="accent" />
+            <StatCard title="Formations actives" value={isGuest ? 2 : 16} change={isGuest ? "assignées" : "+3 cette semaine"} changeType="positive" icon={BookOpen} color="accent" />
           </motion.div>
           <motion.div variants={item}>
-            <StatCard title="Documents indexés" value={342} change="82 nouveaux" changeType="neutral" icon={FileText} color="info" />
+            <StatCard title="Documents indexés" value={isGuest ? "—" : 342} change={isGuest ? "" : "82 nouveaux"} changeType="neutral" icon={FileText} color="info" />
           </motion.div>
           <motion.div variants={item}>
-            <StatCard title="Score moyen" value="87%" change="+5% vs mois dernier" changeType="positive" icon={Trophy} color="success" />
+            <StatCard title="Score moyen" value="87%" change={isGuest ? "" : "+5% vs mois dernier"} changeType="positive" icon={Trophy} color="success" />
           </motion.div>
         </motion.div>
 
@@ -95,7 +98,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:col-span-2 card-elevated rounded-xl p-6"
+            className={`card-elevated rounded-xl p-6 ${canViewActivity ? "lg:col-span-2" : "lg:col-span-3"}`}
           >
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-semibold text-foreground">Formations en cours</h2>
@@ -135,70 +138,52 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Activité récente */}
+          {/* Activité récente — hidden for guests */}
+          {canViewActivity && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="card-elevated rounded-xl p-6"
+            >
+              <h2 className="text-lg font-semibold text-foreground mb-5">Activité récente</h2>
+              <div className="space-y-4">
+                {recentActivities.map((a, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 + i * 0.1 }}
+                    className="flex gap-3"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Zap className="w-3.5 h-3.5 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm text-foreground">
+                        <span className="font-semibold">{a.user}</span>{" "}
+                        <span className="text-muted-foreground">{a.action}</span>
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {a.formation} · {a.time}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Quick Actions — hidden for guests */}
+        {canViewQuickActions && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="card-elevated rounded-xl p-6"
+            transition={{ delay: 0.6 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
           >
-            <h2 className="text-lg font-semibold text-foreground mb-5">Activité récente</h2>
-            <div className="space-y-4">
-              {recentActivities.map((a, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 + i * 0.1 }}
-                  className="flex gap-3"
-                >
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-3.5 h-3.5 text-primary" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm text-foreground">
-                      <span className="font-semibold">{a.user}</span>{" "}
-                      <span className="text-muted-foreground">{a.action}</span>
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {a.formation} · {a.time}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-        >
-          {[
-            { icon: Target, title: "Générer une formation", desc: "À partir de vos documents", gradient: "gradient-primary" },
-            { icon: TrendingUp, title: "Voir les analytics", desc: "Performance des équipes", gradient: "gradient-accent" },
-            { icon: Clock, title: "Lancer un jeu de rôle", desc: "Simulation interactive", gradient: "bg-success" },
-          ].map((action) => (
-            <motion.button
-              key={action.title}
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="card-elevated card-accent-left hover-ring rounded-xl p-5 text-left hover:shadow-lg transition-all group cursor-pointer"
-              style={{ "--accent-gradient": action.gradient === "gradient-primary" ? "var(--gradient-primary)" : action.gradient === "bg-success" ? "linear-gradient(135deg, hsl(152 60% 42%), hsl(152 60% 32%))" : "var(--gradient-silver)" } as React.CSSProperties}
-            >
-              <div className={`w-10 h-10 rounded-lg ${action.gradient} flex items-center justify-center mb-3 icon-bounce`}>
-                <action.icon className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <p className="text-sm font-semibold text-foreground">{action.title}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{action.desc}</p>
-            </motion.button>
-          ))}
-          {/* Invite action */}
-          <InviteDialog
-            trigger={
+            {canGenerateFormation && (
               <motion.button
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
@@ -206,14 +191,58 @@ const Index = () => {
                 style={{ "--accent-gradient": "var(--gradient-primary)" } as React.CSSProperties}
               >
                 <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center mb-3 icon-bounce">
-                  <UserPlus className="w-5 h-5 text-primary-foreground" />
+                  <Target className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <p className="text-sm font-semibold text-foreground">Inviter un participant</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Lien d'invitation externe</p>
+                <p className="text-sm font-semibold text-foreground">Générer une formation</p>
+                <p className="text-xs text-muted-foreground mt-0.5">À partir de vos documents</p>
               </motion.button>
-            }
-          />
-        </motion.div>
+            )}
+            {canViewAnalytics && (
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="card-elevated card-accent-left hover-ring rounded-xl p-5 text-left hover:shadow-lg transition-all group cursor-pointer"
+                style={{ "--accent-gradient": "var(--gradient-silver)" } as React.CSSProperties}
+              >
+                <div className="w-10 h-10 rounded-lg gradient-accent flex items-center justify-center mb-3 icon-bounce">
+                  <TrendingUp className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <p className="text-sm font-semibold text-foreground">Voir les analytics</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Performance des équipes</p>
+              </motion.button>
+            )}
+            <motion.button
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="card-elevated card-accent-left hover-ring rounded-xl p-5 text-left hover:shadow-lg transition-all group cursor-pointer"
+              style={{ "--accent-gradient": "linear-gradient(135deg, hsl(152 60% 42%), hsl(152 60% 32%))" } as React.CSSProperties}
+            >
+              <div className="w-10 h-10 rounded-lg bg-success flex items-center justify-center mb-3 icon-bounce">
+                <Clock className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <p className="text-sm font-semibold text-foreground">Lancer un jeu de rôle</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Simulation interactive</p>
+            </motion.button>
+            {canInvite && (
+              <InviteDialog
+                trigger={
+                  <motion.button
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="card-elevated card-accent-left hover-ring rounded-xl p-5 text-left hover:shadow-lg transition-all group cursor-pointer"
+                    style={{ "--accent-gradient": "var(--gradient-primary)" } as React.CSSProperties}
+                  >
+                    <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center mb-3 icon-bounce">
+                      <UserPlus className="w-5 h-5 text-primary-foreground" />
+                    </div>
+                    <p className="text-sm font-semibold text-foreground">Inviter un participant</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Lien d'invitation externe</p>
+                  </motion.button>
+                }
+              />
+            )}
+          </motion.div>
+        )}
       </div>
     </DashboardLayout>
   );

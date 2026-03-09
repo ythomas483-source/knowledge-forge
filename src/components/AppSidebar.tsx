@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRole } from "@/contexts/RoleContext";
+import { usePermissions } from "@/hooks/usePermissions";
 import {
   LayoutDashboard,
   BookOpen,
@@ -24,6 +25,7 @@ interface NavItem {
   icon: React.ElementType;
   path: string;
   adminOnly?: boolean;
+  hideForGuest?: boolean;
 }
 
 const navItems: NavItem[] = [
@@ -32,19 +34,22 @@ const navItems: NavItem[] = [
   { label: "Documents", icon: FileText, path: "/documents" },
   { label: "Évaluations", icon: ClipboardCheck, path: "/evaluations" },
   { label: "Jeu de rôle", icon: Gamepad2, path: "/roleplay" },
-  { label: "Analytics", icon: BarChart3, path: "/analytics" },
+  { label: "Analytics", icon: BarChart3, path: "/analytics", hideForGuest: true },
   { label: "Utilisateurs", icon: Users, path: "/users", adminOnly: true },
-  { label: "Paramètres", icon: Settings, path: "/settings" },
+  { label: "Paramètres", icon: Settings, path: "/settings", hideForGuest: true },
 ];
 
 const AppSidebar = () => {
   const { role } = useRole();
+  const { canInvite, isGuest } = usePermissions();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
-  const filteredItems = navItems.filter(
-    (item) => !item.adminOnly || role === "admin"
-  );
+  const filteredItems = navItems.filter((item) => {
+    if (item.adminOnly && role !== "admin") return false;
+    if (item.hideForGuest && isGuest) return false;
+    return true;
+  });
 
   return (
     <motion.aside
@@ -118,26 +123,28 @@ const AppSidebar = () => {
 
       {/* Invite + Role Badge & Collapse */}
       <div className="px-3 pb-4 space-y-3 border-t border-sidebar-border pt-3">
-        {/* Invite button */}
-        <InviteDialog
-          trigger={
-            <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground transition-all duration-200 group cursor-pointer">
-              <UserPlus className="w-5 h-5 flex-shrink-0 text-primary" />
-              <AnimatePresence>
-                {!collapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    className="text-sm font-medium overflow-hidden whitespace-nowrap"
-                  >
-                    Inviter
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </button>
-          }
-        />
+        {/* Invite button — hidden for guests */}
+        {canInvite && (
+          <InviteDialog
+            trigger={
+              <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground transition-all duration-200 group cursor-pointer">
+                <UserPlus className="w-5 h-5 flex-shrink-0 text-primary" />
+                <AnimatePresence>
+                  {!collapsed && (
+                    <motion.span
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      className="text-sm font-medium overflow-hidden whitespace-nowrap"
+                    >
+                      Inviter
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            }
+          />
+        )}
         <AnimatePresence>
           {!collapsed && (
             <motion.div
@@ -148,7 +155,7 @@ const AppSidebar = () => {
             >
               <Shield className="w-4 h-4 text-sidebar-primary" />
               <span className="text-xs font-semibold uppercase tracking-wider text-sidebar-foreground">
-                {role}
+                {role === "guest" ? "invité" : role}
               </span>
             </motion.div>
           )}
