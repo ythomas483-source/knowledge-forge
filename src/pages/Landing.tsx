@@ -107,7 +107,7 @@ const Landing = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center space-y-6"
         >
-          <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-2xl lg:text-3xl text-foreground max-w-2xl mx-auto leading-relaxed font-semibold">
             {t("hero_subtitle")}
           </p>
 
