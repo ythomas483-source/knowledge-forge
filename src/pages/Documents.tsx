@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
-import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation, Download, Lock, Send, Bot, User, Sparkles, ShieldCheck } from "lucide-react";
+import { FileText, Upload, Search, Filter, File, FileSpreadsheet, Presentation, Download, Send, Bot, User, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useRole } from "@/contexts/RoleContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { usePermissions } from "@/hooks/usePermissions";
+import RestrictedBadge from "@/components/RestrictedBadge";
 import { usePIIDetector } from "@/hooks/usePIIDetector";
 import PIIPreviewDialog from "@/components/PIIPreviewDialog";
 import { toast } from "@/hooks/use-toast";
@@ -41,9 +40,8 @@ const serviceBadgeColors: Record<string, string> = {
 };
 
 const Documents = () => {
-  const { role } = useRole();
   const { t } = useLanguage();
-  const isRestricted = false;
+  const { canUpload, canUseAIChat, canDownloadDocs, isGuest } = usePermissions();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -77,7 +75,6 @@ const Documents = () => {
     triggerPIICheck();
   };
 
-
   return (
     <DashboardLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
@@ -93,11 +90,13 @@ const Documents = () => {
               Bibliothèque documentaire & base vectorielle
             </p>
           </div>
-          {!isRestricted && (
+          {canUpload ? (
             <Button className="gradient-primary text-primary-foreground gap-2 shadow-md hover:shadow-lg transition-shadow">
               <Upload className="w-4 h-4" />
               Importer
             </Button>
+          ) : (
+            <RestrictedBadge />
           )}
         </motion.div>
 
@@ -118,7 +117,7 @@ const Documents = () => {
         </motion.div>
 
         {/* Upload Zone (hidden for guests) */}
-        {!isRestricted && (
+        {canUpload && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -146,9 +145,9 @@ const Documents = () => {
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Service</th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Taille</th>
                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chunks</th>
-                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Statut</th>
-                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
-                   <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
+                  <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Statut</th>
+                  <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date</th>
+                  <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -189,19 +188,12 @@ const Documents = () => {
                       </td>
                       <td className="py-3 px-4 text-sm text-muted-foreground">{doc.uploadedAt}</td>
                       <td className="py-3 px-4">
-                        {isRestricted ? (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground cursor-not-allowed">
-                                <Lock className="w-3 h-3" /> {t("access_restricted")}
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent>{t("access_restricted")}</TooltipContent>
-                          </Tooltip>
-                        ) : (
+                        {canDownloadDocs ? (
                           <Button variant="ghost" size="sm" className="gap-1 text-xs h-7">
                             <Download className="w-3 h-3" /> {t("download")}
                           </Button>
+                        ) : (
+                          <RestrictedBadge />
                         )}
                       </td>
                     </motion.tr>
@@ -212,83 +204,85 @@ const Documents = () => {
           </div>
         </motion.div>
 
-        {/* AI Prompt Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="card-elevated rounded-xl p-6 space-y-4"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-primary-foreground" />
+        {/* AI Prompt Section — hidden for guests */}
+        {canUseAIChat && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="card-elevated rounded-xl p-6 space-y-4"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Générer une formation</h2>
+                <p className="text-xs text-muted-foreground">Décrivez la formation à créer à partir de vos documents importés</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-lg font-semibold text-foreground">Générer une formation</h2>
-              <p className="text-xs text-muted-foreground">Décrivez la formation à créer à partir de vos documents importés</p>
-            </div>
-          </div>
 
-          {/* Chat messages */}
-          {messages.length > 0 && (
-            <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
-              {messages.map((msg, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
-                >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    msg.role === "system" ? "gradient-primary" : "bg-accent"
-                  }`}>
-                    {msg.role === "system" ? (
-                      <Bot className="w-3.5 h-3.5 text-primary-foreground" />
-                    ) : (
-                      <User className="w-3.5 h-3.5 text-accent-foreground" />
-                    )}
-                  </div>
-                  <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    msg.role === "system"
-                      ? "glass-card text-foreground"
-                      : "gradient-primary text-primary-foreground"
-                  }`}>
-                    <p className="whitespace-pre-wrap">{msg.content}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
+            {/* Chat messages */}
+            {messages.length > 0 && (
+              <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+                {messages.map((msg, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
+                  >
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      msg.role === "system" ? "gradient-primary" : "bg-accent"
+                    }`}>
+                      {msg.role === "system" ? (
+                        <Bot className="w-3.5 h-3.5 text-primary-foreground" />
+                      ) : (
+                        <User className="w-3.5 h-3.5 text-accent-foreground" />
+                      )}
+                    </div>
+                    <div className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                      msg.role === "system"
+                        ? "glass-card text-foreground"
+                        : "gradient-primary text-primary-foreground"
+                    }`}>
+                      <p className="whitespace-pre-wrap">{msg.content}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
 
-          {/* Input */}
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Ex : Créer une formation sécurité réseau à partir des documents IT..."
-              className="flex-1"
+            {/* Input */}
+            <div className="flex gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && send()}
+                placeholder="Ex : Créer une formation sécurité réseau à partir des documents IT..."
+                className="flex-1"
+              />
+              <Button onClick={send} className="gradient-primary text-primary-foreground px-4 gap-2">
+                <ShieldCheck className="w-4 h-4" />
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* PII Preview Dialog */}
+            <PIIPreviewDialog
+              open={piiDialogOpen}
+              onOpenChange={setPiiDialogOpen}
+              result={lastResult}
+              isLoading={piiLoading}
+              loadProgress={loadProgress}
+              onConfirm={(anonymizedText) => {
+                toast({ title: "🛡️ Données anonymisées", description: `${lastResult?.entities.length ?? 0} PII remplacées` });
+                sendWithText(anonymizedText);
+              }}
+              onCancel={() => { setPiiDialogOpen(false); setPendingInput(""); }}
             />
-            <Button onClick={send} className="gradient-primary text-primary-foreground px-4 gap-2">
-              <ShieldCheck className="w-4 h-4" />
-              <Send className="w-4 h-4" />
-            </Button>
-          </div>
-
-          {/* PII Preview Dialog */}
-          <PIIPreviewDialog
-            open={piiDialogOpen}
-            onOpenChange={setPiiDialogOpen}
-            result={lastResult}
-            isLoading={piiLoading}
-            loadProgress={loadProgress}
-            onConfirm={(anonymizedText) => {
-              toast({ title: "🛡️ Données anonymisées", description: `${lastResult?.entities.length ?? 0} PII remplacées` });
-              sendWithText(anonymizedText);
-            }}
-            onCancel={() => { setPiiDialogOpen(false); setPendingInput(""); }}
-          />
-        </motion.div>
+          </motion.div>
+        )}
       </div>
     </DashboardLayout>
   );

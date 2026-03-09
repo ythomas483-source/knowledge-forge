@@ -1,8 +1,11 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatCard from "@/components/StatCard";
 import { BarChart3, Users, Clock, TrendingUp, Target } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { usePermissions } from "@/hooks/usePermissions";
 
 const serviceStats = [
   { service: "IT", completion: 82, avgScore: 88, activeUsers: 32, formations: 4 },
@@ -19,6 +22,17 @@ const serviceBadgeColors: Record<string, string> = {
 };
 
 const Analytics = () => {
+  const { canViewAnalytics } = usePermissions();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!canViewAnalytics) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [canViewAnalytics, navigate]);
+
+  if (!canViewAnalytics) return null;
+
   return (
     <DashboardLayout>
       <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
@@ -75,7 +89,7 @@ const Analytics = () => {
           </div>
         </motion.div>
 
-        {/* Skills Heatmap placeholder */}
+        {/* Skills Heatmap */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
