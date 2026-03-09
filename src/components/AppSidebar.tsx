@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRole } from "@/contexts/RoleContext";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -17,6 +17,7 @@ import {
   Shield,
   Gamepad2,
   UserPlus,
+  LogOut,
 } from "lucide-react";
 import InviteDialog from "@/components/InviteDialog";
 
@@ -41,11 +42,17 @@ const navItems: NavItem[] = [
 ];
 
 const AppSidebar = () => {
-  const { role } = useRole();
+  const { role, logout } = useRole();
   const { canInvite, isGuest } = usePermissions();
   const { t } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   const filteredItems = navItems.filter((item) => {
     if (item.adminOnly && role !== "admin") return false;
@@ -162,6 +169,24 @@ const AppSidebar = () => {
             </motion.div>
           )}
         </AnimatePresence>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-destructive hover:bg-destructive/10 transition-all duration-200 group cursor-pointer"
+        >
+          <LogOut className="w-5 h-5 flex-shrink-0" />
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.span
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                className="text-sm font-medium overflow-hidden whitespace-nowrap"
+              >
+                {t("nav_logout")}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="w-full flex items-center justify-center py-2 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
