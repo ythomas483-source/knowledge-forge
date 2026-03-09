@@ -181,6 +181,7 @@ const translations: Record<Locale, Record<string, string>> = {
     nav_settings: "Impostazioni",
     nav_invite: "Invita",
     role_guest: "ospite",
+    nav_logout: "Disconnetti",
     dashboard_title: "Dashboard",
     dashboard_subtitle: "Panoramica del Knowledge Engine",
     dashboard_subtitle_guest: "Le tue formazioni e valutazioni",
