@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRole } from "@/contexts/RoleContext";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   LayoutDashboard,
   BookOpen,
@@ -21,7 +22,7 @@ import InviteDialog from "@/components/InviteDialog";
 
 
 interface NavItem {
-  label: string;
+  labelKey: string;
   icon: React.ElementType;
   path: string;
   adminOnly?: boolean;
@@ -29,19 +30,20 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "Tableau de bord", icon: LayoutDashboard, path: "/dashboard" },
-  { label: "Formations", icon: BookOpen, path: "/formations" },
-  { label: "Documents", icon: FileText, path: "/documents" },
-  { label: "Évaluations", icon: ClipboardCheck, path: "/evaluations" },
-  { label: "Jeu de rôle", icon: Gamepad2, path: "/roleplay" },
-  { label: "Analytics", icon: BarChart3, path: "/analytics", hideForGuest: true },
-  { label: "Utilisateurs", icon: Users, path: "/users", adminOnly: true },
-  { label: "Paramètres", icon: Settings, path: "/settings", hideForGuest: true },
+  { labelKey: "nav_dashboard", icon: LayoutDashboard, path: "/dashboard" },
+  { labelKey: "nav_formations", icon: BookOpen, path: "/formations" },
+  { labelKey: "nav_documents", icon: FileText, path: "/documents" },
+  { labelKey: "nav_evaluations", icon: ClipboardCheck, path: "/evaluations" },
+  { labelKey: "nav_roleplay", icon: Gamepad2, path: "/roleplay" },
+  { labelKey: "nav_analytics", icon: BarChart3, path: "/analytics", hideForGuest: true },
+  { labelKey: "nav_users", icon: Users, path: "/users", adminOnly: true },
+  { labelKey: "nav_settings", icon: Settings, path: "/settings", hideForGuest: true },
 ];
 
 const AppSidebar = () => {
   const { role } = useRole();
   const { canInvite, isGuest } = usePermissions();
+  const { t } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
@@ -112,7 +114,7 @@ const AppSidebar = () => {
                     exit={{ opacity: 0, width: 0 }}
                     className="text-sm font-medium overflow-hidden whitespace-nowrap"
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </motion.span>
                 )}
               </AnimatePresence>
@@ -137,7 +139,7 @@ const AppSidebar = () => {
                       exit={{ opacity: 0, width: 0 }}
                       className="text-sm font-medium overflow-hidden whitespace-nowrap"
                     >
-                      Inviter
+                      {t("nav_invite")}
                     </motion.span>
                   )}
                 </AnimatePresence>
@@ -155,7 +157,7 @@ const AppSidebar = () => {
             >
               <Shield className="w-4 h-4 text-sidebar-primary" />
               <span className="text-xs font-semibold uppercase tracking-wider text-sidebar-foreground">
-                {role === "guest" ? "invité" : role}
+                {role === "guest" ? t("role_guest") : role}
               </span>
             </motion.div>
           )}

@@ -4,6 +4,7 @@ import { BookOpen, Clock, Users, ChevronRight, Sparkles } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useLanguage } from "@/contexts/LanguageContext";
 import RestrictedBadge from "@/components/RestrictedBadge";
 
 const formations = [
@@ -21,13 +22,14 @@ const serviceBadgeColors: Record<string, string> = {
   RH: "bg-primary/10 text-primary",
 };
 
-const statusLabels: Record<string, { label: string; className: string }> = {
-  active: { label: "Active", className: "bg-success/10 text-success" },
-  draft: { label: "Brouillon", className: "bg-muted text-muted-foreground" },
-};
-
 const Formations = () => {
   const { canGenerateFormation, isGuest } = usePermissions();
+  const { t } = useLanguage();
+
+  const statusLabels: Record<string, { label: string; className: string }> = {
+    active: { label: t("status_active"), className: "bg-success/10 text-success" },
+    draft: { label: t("status_draft"), className: "bg-muted text-muted-foreground" },
+  };
 
   // Guests only see active formations
   const visibleFormations = isGuest
@@ -44,18 +46,16 @@ const Formations = () => {
           className="flex items-center justify-between"
         >
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Formations</h1>
-            <p className="text-muted-foreground mt-1">
-              Parcours générés automatiquement par l'IA
-            </p>
+            <h1 className="text-3xl font-bold text-foreground">{t("formations_title")}</h1>
+            <p className="text-muted-foreground mt-1">{t("formations_subtitle")}</p>
           </div>
           {canGenerateFormation ? (
             <Button className="gradient-primary text-primary-foreground gap-2 shadow-md hover:shadow-lg transition-shadow">
               <Sparkles className="w-4 h-4" />
-              Générer une formation
+              {t("formations_generate")}
             </Button>
           ) : (
-            <RestrictedBadge label={isGuest ? "Lecture seule" : "Réservé aux admins"} />
+            <RestrictedBadge label={isGuest ? t("formations_readonly") : t("formations_admin_only")} />
           )}
         </motion.div>
 
@@ -86,10 +86,10 @@ const Formations = () => {
                   <p className="text-sm text-muted-foreground mb-3">{f.description}</p>
                   <div className="flex items-center gap-6 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <BookOpen className="w-3.5 h-3.5" /> {f.modules} modules
+                      <BookOpen className="w-3.5 h-3.5" /> {f.modules} {t("modules")}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5" /> {f.participants} participants
+                      <Users className="w-3.5 h-3.5" /> {f.participants} {t("participants")}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" /> {f.generatedAt}

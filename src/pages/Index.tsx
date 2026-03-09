@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import StatCard from "@/components/StatCard";
 import InviteDialog from "@/components/InviteDialog";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Users,
   BookOpen,
@@ -17,10 +18,10 @@ import {
 import { Progress } from "@/components/ui/progress";
 
 const recentFormations = [
-  { title: "Sécurité Réseau – Interne", service: "IT", progress: 78, modules: 4 },
-  { title: "Onboarding Commercial Q1", service: "Sales", progress: 45, modules: 6 },
-  { title: "RGPD & Conformité 2024", service: "Compliance", progress: 92, modules: 3 },
-  { title: "Process RH – Recrutement", service: "RH", progress: 34, modules: 5 },
+  { titleKey: "Sécurité Réseau – Interne", service: "IT", progress: 78, modules: 4 },
+  { titleKey: "Onboarding Commercial Q1", service: "Sales", progress: 45, modules: 6 },
+  { titleKey: "RGPD & Conformité 2024", service: "Compliance", progress: 92, modules: 3 },
+  { titleKey: "Process RH – Recrutement", service: "RH", progress: 34, modules: 5 },
 ];
 
 const recentActivities = [
@@ -52,6 +53,7 @@ const item = {
 
 const Index = () => {
   const { canViewActivity, canViewQuickActions, canInvite, canGenerateFormation, canViewAnalytics, isGuest } = usePermissions();
+  const { t } = useLanguage();
 
   return (
     <DashboardLayout>
@@ -63,10 +65,10 @@ const Index = () => {
           className="space-y-1"
         >
           <h1 className="text-3xl font-bold text-foreground">
-            Tableau de bord
+            {t("dashboard_title")}
           </h1>
           <p className="text-muted-foreground">
-            {isGuest ? "Vos formations et évaluations" : "Vue d'ensemble de votre Knowledge Engine"}
+            {isGuest ? t("dashboard_subtitle_guest") : t("dashboard_subtitle")}
           </p>
         </motion.div>
 
@@ -78,16 +80,16 @@ const Index = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
         >
           <motion.div variants={item}>
-            <StatCard title="Apprenants actifs" value={isGuest ? "—" : 248} change={isGuest ? "" : "+12% ce mois"} changeType="positive" icon={Users} color="primary" />
+            <StatCard title={t("stat_active_learners")} value={isGuest ? "—" : 248} change={isGuest ? "" : t("stat_change_month")} changeType="positive" icon={Users} color="primary" />
           </motion.div>
           <motion.div variants={item}>
-            <StatCard title="Formations actives" value={isGuest ? 2 : 16} change={isGuest ? "assignées" : "+3 cette semaine"} changeType="positive" icon={BookOpen} color="accent" />
+            <StatCard title={t("stat_active_formations")} value={isGuest ? 2 : 16} change={isGuest ? t("stat_assigned") : t("stat_change_week")} changeType="positive" icon={BookOpen} color="accent" />
           </motion.div>
           <motion.div variants={item}>
-            <StatCard title="Documents indexés" value={isGuest ? "—" : 342} change={isGuest ? "" : "82 nouveaux"} changeType="neutral" icon={FileText} color="info" />
+            <StatCard title={t("stat_indexed_docs")} value={isGuest ? "—" : 342} change={isGuest ? "" : t("stat_new_docs")} changeType="neutral" icon={FileText} color="info" />
           </motion.div>
           <motion.div variants={item}>
-            <StatCard title="Score moyen" value="87%" change={isGuest ? "" : "+5% vs mois dernier"} changeType="positive" icon={Trophy} color="success" />
+            <StatCard title={t("stat_avg_score")} value="87%" change={isGuest ? "" : t("stat_vs_last_month")} changeType="positive" icon={Trophy} color="success" />
           </motion.div>
         </motion.div>
 
@@ -101,15 +103,15 @@ const Index = () => {
             className={`card-elevated rounded-xl p-6 ${canViewActivity ? "lg:col-span-2" : "lg:col-span-3"}`}
           >
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-semibold text-foreground">Formations en cours</h2>
+              <h2 className="text-lg font-semibold text-foreground">{t("formations_in_progress")}</h2>
               <span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
-                {recentFormations.length} actives
+                {recentFormations.length} {t("active")}
               </span>
             </div>
             <div className="space-y-4">
               {recentFormations.map((f, i) => (
                 <motion.div
-                  key={f.title}
+                  key={f.titleKey}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 + i * 0.1 }}
@@ -120,7 +122,7 @@ const Index = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <p className="text-sm font-semibold text-foreground truncate">{f.title}</p>
+                      <p className="text-sm font-semibold text-foreground truncate">{f.titleKey}</p>
                       <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${serviceBadgeColors[f.service] || "bg-muted text-muted-foreground"}`}>
                         {f.service}
                       </span>
@@ -131,7 +133,7 @@ const Index = () => {
                     </div>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {f.modules} modules
+                    {f.modules} {t("modules")}
                   </div>
                 </motion.div>
               ))}
@@ -146,7 +148,7 @@ const Index = () => {
               transition={{ delay: 0.4 }}
               className="card-elevated rounded-xl p-6"
             >
-              <h2 className="text-lg font-semibold text-foreground mb-5">Activité récente</h2>
+              <h2 className="text-lg font-semibold text-foreground mb-5">{t("recent_activity")}</h2>
               <div className="space-y-4">
                 {recentActivities.map((a, i) => (
                   <motion.div
@@ -193,8 +195,8 @@ const Index = () => {
                 <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center mb-3 icon-bounce">
                   <Target className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <p className="text-sm font-semibold text-foreground">Générer une formation</p>
-                <p className="text-xs text-muted-foreground mt-0.5">À partir de vos documents</p>
+                <p className="text-sm font-semibold text-foreground">{t("quick_generate")}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("quick_generate_desc")}</p>
               </motion.button>
             )}
             {canViewAnalytics && (
@@ -207,8 +209,8 @@ const Index = () => {
                 <div className="w-10 h-10 rounded-lg gradient-accent flex items-center justify-center mb-3 icon-bounce">
                   <TrendingUp className="w-5 h-5 text-primary-foreground" />
                 </div>
-                <p className="text-sm font-semibold text-foreground">Voir les analytics</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Performance des équipes</p>
+                <p className="text-sm font-semibold text-foreground">{t("quick_analytics")}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("quick_analytics_desc")}</p>
               </motion.button>
             )}
             <motion.button
@@ -220,8 +222,8 @@ const Index = () => {
               <div className="w-10 h-10 rounded-lg bg-success flex items-center justify-center mb-3 icon-bounce">
                 <Clock className="w-5 h-5 text-primary-foreground" />
               </div>
-              <p className="text-sm font-semibold text-foreground">Lancer un jeu de rôle</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Simulation interactive</p>
+              <p className="text-sm font-semibold text-foreground">{t("quick_roleplay")}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{t("quick_roleplay_desc")}</p>
             </motion.button>
             {canInvite && (
               <InviteDialog
@@ -235,8 +237,8 @@ const Index = () => {
                     <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center mb-3 icon-bounce">
                       <UserPlus className="w-5 h-5 text-primary-foreground" />
                     </div>
-                    <p className="text-sm font-semibold text-foreground">Inviter un participant</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Lien d'invitation externe</p>
+                    <p className="text-sm font-semibold text-foreground">{t("quick_invite")}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("quick_invite_desc")}</p>
                   </motion.button>
                 }
               />

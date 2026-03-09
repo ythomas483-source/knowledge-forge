@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { ClipboardCheck, CheckCircle2, XCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const sampleQuiz = {
   title: "QCM – Sécurité Réseau",
@@ -45,6 +46,7 @@ const Evaluations = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showResults, setShowResults] = useState(false);
+  const { t } = useLanguage();
 
   const q = sampleQuiz.questions[currentQuestion];
   const totalQuestions = sampleQuiz.questions.length;
@@ -89,8 +91,8 @@ const Evaluations = () => {
             </h2>
             <p className="text-muted-foreground">
               {score >= totalQuestions * 0.7
-                ? "Excellent ! Vous maîtrisez ce module."
-                : "Des axes d'amélioration ont été identifiés."}
+                ? t("eval_success")
+                : t("eval_fail")}
             </p>
             <div className="grid grid-cols-2 gap-3 pt-4">
               {sampleQuiz.questions.map((question, i) => (
@@ -102,7 +104,7 @@ const Evaluations = () => {
                       : "bg-destructive/10 text-destructive"
                   }`}
                 >
-                  Q{i + 1}: {answers[i] === question.correct ? "Correct" : "Incorrect"}
+                  Q{i + 1}: {answers[i] === question.correct ? t("eval_correct") : t("eval_incorrect")}
                 </div>
               ))}
             </div>
@@ -110,7 +112,7 @@ const Evaluations = () => {
               onClick={() => { setCurrentQuestion(0); setAnswers({}); setShowResults(false); }}
               className="gradient-primary text-primary-foreground mt-4"
             >
-              Recommencer
+              {t("eval_restart")}
             </Button>
           </motion.div>
         </div>
@@ -122,14 +124,14 @@ const Evaluations = () => {
     <DashboardLayout>
       <div className="p-6 lg:p-8 max-w-2xl mx-auto space-y-6">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-3xl font-bold text-foreground">Évaluations</h1>
+          <h1 className="text-3xl font-bold text-foreground">{t("eval_title")}</h1>
           <p className="text-muted-foreground mt-1">{sampleQuiz.title} — {sampleQuiz.module}</p>
         </motion.div>
 
         {/* Progress */}
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Question {currentQuestion + 1} / {totalQuestions}</span>
+            <span>{t("eval_question")} {currentQuestion + 1} / {totalQuestions}</span>
             <span>{Math.round(progress)}%</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -178,7 +180,7 @@ const Evaluations = () => {
               disabled={answers[currentQuestion] === undefined}
               className="gradient-primary text-primary-foreground gap-2"
             >
-              {currentQuestion < totalQuestions - 1 ? "Suivant" : "Terminer"}
+              {currentQuestion < totalQuestions - 1 ? t("eval_next") : t("eval_finish")}
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
