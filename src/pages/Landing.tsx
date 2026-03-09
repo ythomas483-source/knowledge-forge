@@ -9,6 +9,7 @@ const locales: { code: Locale; label: string }[] = [
   { code: "it", label: "IT" },
   { code: "de", label: "DE" },
   { code: "en", label: "EN" },
+  { code: "rm", label: "RM" },
 ];
 
 const SwissCross = () => (
