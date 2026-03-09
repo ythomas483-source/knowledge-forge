@@ -194,7 +194,7 @@ const Landing = () => {
             <SwissCross />
             <span className="text-sm font-semibold text-muted-foreground">{t("footer")}</span>
           </div>
-          <p className="text-xs text-muted-foreground">FR · IT · DE · EN</p>
+          <p className="text-xs text-muted-foreground">FR · IT · DE · EN · RM</p>
         </motion.footer>
       </main>
     </div>
