@@ -556,6 +556,7 @@ const translations: Record<Locale, Record<string, string>> = {
     nav_settings: "Parameters",
     nav_invite: "Invitar",
     role_guest: "ospita",
+    nav_logout: "Deconnectar",
     dashboard_title: "Survista",
     dashboard_subtitle: "Survista da voss Knowledge Engine",
     dashboard_subtitle_guest: "Vossas furmaziuns ed evaluaziuns",
