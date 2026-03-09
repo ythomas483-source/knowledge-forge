@@ -72,7 +72,7 @@ const Landing = () => {
               <span className="text-gradient-silver">Lumina</span>{" "}
               <span className="text-gradient-red">Swiss</span>
             </span>
-            <span className="text-[10px] block text-muted-foreground -mt-0.5 font-medium">{t("hero_title")}</span>
+            <span className="text-xs block text-muted-foreground -mt-0.5 font-medium">{t("hero_title")}</span>
           </div>
         </motion.div>
 
