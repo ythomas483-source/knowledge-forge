@@ -4,6 +4,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Gamepad2, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Message {
   role: "system" | "user";
@@ -21,6 +22,7 @@ const initialMessages: Message[] = [
 const Roleplay = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
+  const { t } = useLanguage();
 
   const send = () => {
     if (!input.trim()) return;
@@ -38,8 +40,8 @@ const Roleplay = () => {
     <DashboardLayout>
       <div className="p-6 lg:p-8 max-w-3xl mx-auto space-y-6 flex flex-col h-[calc(100vh-2rem)]">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-3xl font-bold text-foreground">Jeu de rôle</h1>
-          <p className="text-muted-foreground mt-1">Simulation interactive basée sur vos procédures internes</p>
+          <h1 className="text-3xl font-bold text-foreground">{t("roleplay_title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("roleplay_subtitle")}</p>
         </motion.div>
 
         {/* Chat Area */}
@@ -82,7 +84,7 @@ const Roleplay = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send()}
-            placeholder="Votre action ou réponse..."
+            placeholder={t("roleplay_placeholder")}
             className="flex-1"
           />
           <Button onClick={send} className="gradient-primary text-primary-foreground">
