@@ -50,6 +50,7 @@ const translations: Record<Locale, Record<string, string>> = {
     nav_settings: "Paramètres",
     nav_invite: "Inviter",
     role_guest: "invité",
+    nav_logout: "Déconnexion",
     // Dashboard
     dashboard_title: "Tableau de bord",
     dashboard_subtitle: "Vue d'ensemble de votre Knowledge Engine",
