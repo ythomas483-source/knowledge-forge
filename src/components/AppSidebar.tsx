@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRole } from "@/contexts/RoleContext";
 import { usePermissions } from "@/hooks/usePermissions";
@@ -17,6 +17,7 @@ import {
   Shield,
   Gamepad2,
   UserPlus,
+  LogOut,
 } from "lucide-react";
 import InviteDialog from "@/components/InviteDialog";
 
