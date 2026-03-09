@@ -42,11 +42,17 @@ const navItems: NavItem[] = [
 ];
 
 const AppSidebar = () => {
-  const { role } = useRole();
+  const { role, logout } = useRole();
   const { canInvite, isGuest } = usePermissions();
   const { t } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   const filteredItems = navItems.filter((item) => {
     if (item.adminOnly && role !== "admin") return false;
