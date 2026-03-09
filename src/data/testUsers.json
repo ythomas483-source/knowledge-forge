@@ -1,0 +1,5 @@
+[
+  { "email": "admin@lumina.ch", "password": "Admin123!", "role": "admin", "name": "Admin Lumina" },
+  { "email": "user@lumina.ch", "password": "User123!", "role": "user", "name": "Marie Dupont" },
+  { "email": "collab@lumina.ch", "password": "Collab123!", "role": "user", "name": "Jean Martin" }
+]

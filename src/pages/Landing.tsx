@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Shield, Users, Sparkles, Database, Building2, ArrowRight, Globe, Monitor, Server } from "lucide-react";
+import { Sparkles, Database, Building2, ArrowRight, Globe, Monitor, Server, LogIn } from "lucide-react";
 import { useLanguage, type Locale } from "@/contexts/LanguageContext";
-
+import { Button } from "@/components/ui/button";
 
 const locales: { code: Locale; label: string }[] = [
   { code: "fr", label: "FR" },
@@ -32,31 +32,6 @@ const Landing = () => {
   const navigate = useNavigate();
   const { locale, setLocale, t } = useLanguage();
 
-  const selectRole = (role: "admin" | "user") => {
-    navigate(`/login?role=${role}`);
-  };
-
-  const roles = [
-    {
-      key: "admin" as const,
-      icon: Shield,
-      titleKey: "admin_title",
-      descKey: "admin_desc",
-      gradient: "from-primary to-primary/70",
-      border: "border-primary/30",
-      glow: "glow-red",
-    },
-    {
-      key: "user" as const,
-      icon: Users,
-      titleKey: "user_title",
-      descKey: "user_desc",
-      gradient: "from-silver to-silver-dark",
-      border: "border-silver/30",
-      glow: "glow-silver",
-    },
-  ];
-
   const features = [
     { icon: Sparkles, key: "feat_ai" },
     { icon: Database, key: "feat_rag" },
@@ -78,7 +53,6 @@ const Landing = () => {
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           className="absolute -bottom-60 -left-40 w-[600px] h-[600px] rounded-full bg-silver/5 blur-[80px]"
         />
-        {/* Grid overlay */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: 'linear-gradient(hsl(0 0% 50%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 50%) 1px, transparent 1px)',
           backgroundSize: '60px 60px'
@@ -125,49 +99,32 @@ const Landing = () => {
       </header>
 
       <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-12 py-8 lg:py-16 space-y-20">
-        {/* Hero subtitle */}
+        {/* Hero */}
         <motion.section
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center space-y-4"
+          className="text-center space-y-6"
         >
           <p className="text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             {t("hero_subtitle")}
           </p>
-        </motion.section>
 
-        {/* RBAC Section */}
-        <motion.section variants={container} initial="hidden" animate="show" className="space-y-8">
-          <motion.div variants={item} className="text-center space-y-2">
-            <h2 className="text-2xl font-bold text-foreground">{t("select_role")}</h2>
-            <p className="text-xs font-mono text-muted-foreground bg-secondary inline-block px-3 py-1 rounded-full border border-border/50">
-              {t("rbac")}
-            </p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Button
+              onClick={() => navigate("/login")}
+              size="lg"
+              className="gradient-primary text-primary-foreground font-semibold h-14 px-10 text-base glow-red"
+            >
+              <LogIn className="w-5 h-5 mr-2" />
+              {t("login_submit")}
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {roles.map((r) => (
-              <motion.button
-                key={r.key}
-                variants={item}
-                whileHover={{ scale: 1.04, y: -6 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => selectRole(r.key)}
-                className={`card-elevated card-accent-top hover-ring rounded-2xl p-8 text-left border ${r.border} transition-all duration-300 group cursor-pointer`}
-                style={{ "--accent-gradient": r.key === "admin" ? "var(--gradient-primary)" : r.key === "user" ? "var(--gradient-silver)" : "linear-gradient(135deg, hsl(220 8% 60%), hsl(220 8% 45%))" } as React.CSSProperties}
-              >
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${r.gradient} flex items-center justify-center mb-5 icon-bounce`}>
-                  <r.icon className="w-7 h-7 text-primary-foreground" />
-                </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">{t(r.titleKey)}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6">{t(r.descKey)}</p>
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:gap-3 transition-all">
-                  {t("enter")} <ArrowRight className="w-4 h-4" />
-                </span>
-              </motion.button>
-            ))}
-          </div>
         </motion.section>
 
         {/* Feature strip */}
