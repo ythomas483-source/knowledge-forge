@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { type DetectionResult, getCategoryLabel, type PIICategory } from "@/lib/pii/piiDetector";
+import { type DetectionResult, type PIICategory } from "@/hooks/usePIIDetector";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PIIPreviewDialogProps {
@@ -21,12 +21,44 @@ interface PIIPreviewDialogProps {
   fileName?: string;
 }
 
-const CATEGORY_COLORS: Record<PIICategory, string> = {
+const CATEGORY_LABELS: Record<string, string> = {
+  PER: "Personne",
+  ORG: "Organisation",
+  LOC: "Lieu",
+  MISC: "Divers",
+  EMAIL: "Email",
+  TELEPHONE: "Téléphone",
+  IBAN: "IBAN",
+  SECU: "N° Sécu",
+  AVS: "N° AVS",
+  DATE: "Date",
+  MONTANT: "Montant",
+  ADRESSE: "Adresse",
+  URL: "URL",
+  ADRESSE_IP: "Adresse IP",
+  SIRET_SIREN: "SIRET/SIREN",
+  CNI: "CNI",
+  URSSAF: "URSSAF",
+  MUTUELLE: "Mutuelle",
+  REFERENCE: "Référence",
+  CODE_POSTAL: "Code postal",
+  IDE: "IDE",
+  DATE_NAISSANCE: "Date naissance",
+};
+
+function getCategoryLabel(cat: string): string {
+  return CATEGORY_LABELS[cat] || cat;
+}
+
+const CATEGORY_COLORS: Record<string, string> = {
   PER: "bg-destructive/10 text-destructive border-destructive/20",
   ORG: "bg-info/10 text-info border-info/20",
   LOC: "bg-warning/10 text-warning border-warning/20",
-  MISC: "bg-muted text-muted-foreground border-border",
 };
+
+function getCategoryColor(cat: string): string {
+  return CATEGORY_COLORS[cat] || "bg-muted text-muted-foreground border-border";
+}
 
 const PIIPreviewDialog = ({
   open, onOpenChange, result, isLoading, loadProgress, onConfirm, onCancel, fileName,
@@ -36,7 +68,7 @@ const PIIPreviewDialog = ({
 
   const entityCount = result?.entities.length ?? 0;
   const categories = result
-    ? [...new Set(result.entities.map((e) => e.entity as PIICategory))]
+    ? [...new Set(result.entities.map((e) => e.entity))]
     : [];
 
   return (
@@ -90,7 +122,7 @@ const PIIPreviewDialog = ({
                     <Badge
                       key={cat}
                       variant="outline"
-                      className={`${CATEGORY_COLORS[cat]} text-xs`}
+                      className={`${getCategoryColor(cat)} text-xs`}
                     >
                       {getCategoryLabel(cat)} ({count})
                     </Badge>
@@ -111,10 +143,10 @@ const PIIPreviewDialog = ({
                     className="flex items-center justify-between text-xs py-1 px-2 rounded bg-muted/30"
                   >
                     <span className="font-mono text-foreground">
-                      {showOriginal ? e.word : `[${e.entity}_${i + 1}]`}
+                      {showOriginal ? e.word : `[[PII_${String(i + 1).padStart(3, '0')}]]`}
                     </span>
                     <span className="text-muted-foreground">
-                      {getCategoryLabel(e.entity as PIICategory)} · {Math.round(e.score * 100)}%
+                      {getCategoryLabel(e.entity)} · {Math.round(e.score * 100)}%
                     </span>
                   </motion.div>
                 ))}
