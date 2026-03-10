@@ -8,14 +8,14 @@ import { CarteTokensChiffree } from './types';
 async function dériverClé(jwt: string, sel: Uint8Array): Promise<CryptoKey> {
   const materiau = await crypto.subtle.importKey(
     'raw',
-    new TextEncoder().encode(jwt),
+    new TextEncoder().encode(jwt) as ArrayBufferView<ArrayBuffer>,
     { name: 'PBKDF2' },
     false,
     ['deriveKey']
   );
 
   return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: sel, iterations: 100_000, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: sel as ArrayBufferView<ArrayBuffer>, iterations: 100_000, hash: 'SHA-256' },
     materiau,
     { name: 'AES-GCM', length: 256 },
     false,
