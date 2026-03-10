@@ -41,7 +41,7 @@ export async function déchiffrerCarteTokens(
 ): Promise<Record<string, string>> {
   const cle = await dériverClé(jwt, chiffre.sel);
   const texteClair = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: chiffre.iv },
+    { name: 'AES-GCM', iv: chiffre.iv as ArrayBufferView<ArrayBuffer> },
     cle,
     chiffre.texteCiphere
   );
